@@ -1,0 +1,25 @@
+# Example service block for the proxy. Add it to the Compose file that already runs Outline so the
+# two share a network, or run it on its own and point OUTLINE_URL at Outline's public address.
+# Secrets come from a .env file next to the Compose file (chmod 600); never inline them here.
+
+services:
+  wiki-bridge:
+    build: ./proxy
+    container_name: wiki-bridge
+    restart: unless-stopped
+    depends_on:
+      - outline
+    environment:
+      OUTLINE_URL: 'http://outline:3000'
+      OUTLINE_PUBLIC_URL: 'https://wiki.example.com'
+      OUTLINE_API_KEY: ${WIKI_BRIDGE_OUTLINE_KEY}
+      BRIDGE_SECRET: ${WIKI_BRIDGE_SECRET}
+      ALLOWED_ORIGINS: 'https://foundry.example.com'
+      PORT: '3002'
+    ports:
+      - "127.0.0.1:3002:3002"   # expose through your reverse proxy or tunnel, not directly
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

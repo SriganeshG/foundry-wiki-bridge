@@ -1,0 +1,28 @@
+{
+  "name": "foundry-wiki-bridge-proxy",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Proxy between the Foundry Wiki Bridge module and an Outline wiki. Keeps the Outline API key server-side.",
+  "type": "module",
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@mixmark-io/domino": "^2.2.0",
+    "marked": "^18.0.11",
+    "turndown": "^7.2.4",
+    "turndown-plugin-gfm": "^1.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "@types/turndown": "^5.0.6",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.3"
+  }
+}

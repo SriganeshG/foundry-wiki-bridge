@@ -1,0 +1,10 @@
+{
+  "id": "foundry-wiki-bridge",
+  "title": "Foundry Wiki Bridge (Outline)",
+  "description": "Two-way sync between journal entries and an Outline wiki, through a small proxy that keeps the wiki API key off the client.",
+  "version": "0.6.0",
+  "authors": [{ "name": "Iswar" }],
+  "compatibility": { "minimum": "13", "verified": "14" },
+  "esmodules": ["scripts/main.mjs"],
+  "styles": ["styles/bridge.css"]
+}

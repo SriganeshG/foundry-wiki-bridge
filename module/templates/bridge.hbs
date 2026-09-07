@@ -1,0 +1,74 @@
+<div class="fwb-body">
+  {{#unless configured}}
+    <p class="fwb-notice">Not configured. Open <strong>Configure Settings → Foundry Wiki Bridge</strong> and set the proxy URL (world) and the bridge secret (this browser only). Then reopen this window.</p>
+  {{/unless}}
+
+  <div class="fwb-toolbar">
+    <label>Collection for this world
+      <select name="collection" {{#if busy}}disabled{{/if}}>
+        <option value="">(choose)</option>
+        {{#each collections}}
+          <option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>
+        {{/each}}
+      </select>
+    </label>
+    <span class="fwb-spacer"></span>
+    <button type="button" data-action="refresh" {{#if busy}}disabled{{/if}}><i class="fa-solid fa-rotate"></i> Refresh</button>
+    <button type="button" data-action="syncAll" {{#unless ready}}disabled{{/unless}} {{#if nothingSelected}}disabled{{/if}} {{#if busy}}disabled{{/if}}><i class="fa-solid fa-arrows-rotate"></i> Sync all</button>
+  </div>
+
+  {{#if ready}}
+    <fieldset class="fwb-roots" {{#if busy}}disabled{{/if}}>
+      <legend>Top-level journal folders to sync</legend>
+      {{#each roots}}
+        <label class="fwb-root"><input type="checkbox" name="root" value="{{id}}" {{#if checked}}checked{{/if}}> {{name}}</label>
+      {{else}}
+        <span class="fwb-hint">No top-level journal folders in this world.</span>
+      {{/each}}
+      <label class="fwb-root fwb-loose"><input type="checkbox" name="looseEntries" {{#if looseEntries}}checked{{/if}}> Entries outside any folder</label>
+    </fieldset>
+
+    <p class="fwb-hint">
+      Syncing: <strong>{{rootName}}</strong>. Each selected folder becomes a 📁 document at the collection root; entries become documents and each text page a document nested under its entry. Unselected folders are never touched on either side and show as "Not selected".
+      <strong>Sync all</strong> pulls wiki-side changes and pushes Foundry-side changes, skipping anything changed on both sides. Folder and entry buttons act on everything beneath them.
+      <br>{{auto}}
+      {{#if counts}}<br>{{counts}}{{/if}}
+      {{#if progress}}<br><strong class="fwb-progress">{{progress}}</strong>{{/if}}
+    </p>
+    <div class="fwb-rows">
+      <table>
+        <thead><tr><th>Item</th><th>Status</th><th class="fwb-actions">Actions</th></tr></thead>
+        <tbody>
+          {{#each rows}}
+            <tr data-key="{{key}}" class="status-{{status}} kind-{{kind}}">
+              <td style="padding-left: calc(0.5rem + {{indentPx}}px)">
+                <i class="fa-solid {{#if isFolder}}fa-folder{{else if isEntry}}fa-book{{else}}fa-file-lines{{/if}} fwb-kind"></i>
+                {{#if url}}<a href="{{url}}" target="_blank" rel="noopener">{{title}}</a>{{else}}{{title}}{{/if}}
+                {{#if pageCount}}<span class="fwb-count">{{pageCount}} page(s)</span>{{/if}}
+              </td>
+              <td><span class="fwb-status">{{statusLabel}}</span></td>
+              <td class="fwb-actions">
+                <button type="button" data-action="pull" title="Wiki → Foundry" {{#unless canPull}}disabled{{/unless}} {{#if ../busy}}disabled{{/if}}><i class="fa-solid fa-arrow-down-to-bracket"></i> Pull</button>
+                <button type="button" data-action="push" title="Foundry → Wiki" {{#unless canPush}}disabled{{/unless}} {{#if ../busy}}disabled{{/if}}><i class="fa-solid fa-arrow-up-from-bracket"></i> Push</button>
+                {{#if canDeleteWiki}}<button type="button" data-action="deleteWiki" class="fwb-danger" title="Move the wiki document to Outline's trash" {{#if ../busy}}disabled{{/if}}><i class="fa-solid fa-trash"></i> wiki</button>{{/if}}
+                {{#if canDeleteFoundry}}<button type="button" data-action="deleteFoundry" class="fwb-danger" title="Delete in Foundry (no undo)" {{#if ../busy}}disabled{{/if}}><i class="fa-solid fa-trash"></i> Foundry</button>{{/if}}
+              </td>
+            </tr>
+          {{else}}
+            <tr><td colspan="3" class="fwb-empty">Nothing on either side for the selected folders, or not refreshed yet.</td></tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  {{else}}
+    <p class="fwb-hint">Pick the Outline collection this world syncs with, then tick the top-level journal folders that should be shared. Anything unticked stays private to Foundry.</p>
+  {{/if}}
+
+  <div class="fwb-log-header">
+    <span>Log</span>
+    <button type="button" data-action="clearLog" class="fwb-mini">clear</button>
+  </div>
+  <div class="fwb-log">
+    {{#each log}}<div class="fwb-log-line {{level}}"><span class="fwb-time">{{time}}</span> {{message}}</div>{{/each}}
+  </div>
+</div>

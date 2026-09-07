@@ -1,0 +1,22 @@
+# dependencies and build output
+node_modules/
+proxy/dist/
+
+# secrets and local config
+.env
+.env.*
+!.env.example
+*.log
+
+# deployment notes for one specific server (LAN addresses, hostnames, footprint); kept local
+files/
+
+# agent tooling and scratch space
+CLAUDE.md
+docs/agents/
+.scratch/
+.claude/
+
+# OS noise
+.DS_Store
+Thumbs.db
